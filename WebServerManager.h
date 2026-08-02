@@ -9,7 +9,7 @@
 class WebServerManager {
 public:
   WebServerManager(WeatherService& weatherSvc, MiP& mipRef);
-  
+
   void begin();
   void handleClient();
   void processPendingWeatherUpdate(bool& chestWritten, bool& solidUpdated, bool extinguished);
@@ -38,4 +38,4 @@ private:
   String chestHTML(uint8_t redHTML, uint8_t greenHTML, uint8_t blueHTML);
 };
 
-#endif // WEB_SERVER_MANAGER_H
+#endif  // WEB_SERVER_MANAGER_H

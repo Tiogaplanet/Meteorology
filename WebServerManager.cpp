@@ -1,6 +1,6 @@
 #include "WebServerManager.h"
 
-extern bool extinguished; // Defined in Meteorology.ino
+extern bool extinguished;  // Defined in Meteorology.ino
 
 WebServerManager::WebServerManager(WeatherService& weatherSvc, MiP& mipRef)
   : server(80), weather(weatherSvc), mip(mipRef), weatherUpdatePending(false), searchError(false) {}
@@ -68,9 +68,9 @@ void WebServerManager::processPendingWeatherUpdate(bool& chestWritten, bool& sol
   if (!weatherUpdatePending) return;
   weatherUpdatePending = false;
 
-  bool success = pendingWasById 
-    ? weather.updateWeatherById(pendingLocation) 
-    : weather.updateWeatherByName(pendingLocation);
+  bool success = pendingWasById
+                   ? weather.updateWeatherById(pendingLocation)
+                   : weather.updateWeatherByName(pendingLocation);
 
   if (success) {
     weather.saveLocation(pendingLocation);
@@ -107,7 +107,7 @@ String WebServerManager::htmlHead() {
 
   head += "<style>\n";
   head += "  body {background-color: #";
-  
+
   if (weather.data.icon.indexOf("01") >= 0) {
     (weather.data.icon.indexOf('d') >= 0) ? head += "065ce5" : head += "04398e";
   } else if (weather.data.icon.indexOf("02") >= 0) {

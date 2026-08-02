@@ -3,6 +3,7 @@
 #include "Config.h"
 #include "WeatherService.h"
 #include "WebServerManager.h"
+#include "secrets.h"  // Includes the SSID and password.
 
 // Hardware and Service instances
 MiP mip;
@@ -24,9 +25,9 @@ void setup() {
     return;
   }
 
-  mip.wifi.begin(SSID, PASSWORD, HOSTNAME);
+  mip.wifi.begin(SECRET_SSID, SECRET_PASSWORD, HOSTNAME);
   ArduinoOTA.begin();
-  randomSeed(analogRead(A0));
+  randomSeed(secureRandom(0, USHRT_MAX));
 
   webServer.begin();
   weatherService.begin();
@@ -58,7 +59,9 @@ void loop() {
     lastPosition = currentPosition;
   }
 
+  // MiP is on his kickstand - start reporting the weather.
   if (mip.position.isOnBackWithKickstand()) {
+    // Listen for claps first
     while (mip.clap.availableEvents() > 0) {
       uint8_t clapCount = mip.clap.readEvent();
       if (clapCount > 0) {
@@ -66,11 +69,53 @@ void loop() {
         if (extinguished) {
           mip.headLEDs.write(MIP_HEAD_LED_OFF, MIP_HEAD_LED_OFF, MIP_HEAD_LED_OFF, MIP_HEAD_LED_OFF);
           mip.chestLED.write(0, 0, 0);
+          lastUpdatedToSolid = false;
+          chestValuesWritten = false;
         }
       }
     }
 
     if (!extinguished) {
+      // Animate MiP's eyes based on weather conditions
+      if (weatherService.data.description.indexOf("rain") >= 0) {
+        unsigned long eyesMillis = millis();
+        if (eyesMillis - previousEyesMillis >= EYES_RAIN_INTERVAL) {
+          mip.headLEDs.unverifiedWrite(
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2));
+          previousEyesMillis = eyesMillis;
+        }
+        lastUpdatedToSolid = false;
+      } else if (weatherService.data.description.indexOf("drizzle") >= 0) {
+        unsigned long eyesMillis = millis();
+        if (eyesMillis - previousEyesMillis >= EYES_DRIZZLE_INTERVAL) {
+          mip.headLEDs.unverifiedWrite(
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2));
+          previousEyesMillis = eyesMillis;
+        }
+        lastUpdatedToSolid = false;
+      } else if (weatherService.data.description.indexOf("mist") >= 0) {
+        unsigned long eyesMillis = millis();
+        if (eyesMillis - previousEyesMillis >= EYES_MIST_INTERVAL) {
+          mip.headLEDs.unverifiedWrite(
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2),
+            (MiPHeadLED)random(0, 2));
+          previousEyesMillis = eyesMillis;
+        }
+        lastUpdatedToSolid = false;
+      } else if (!lastUpdatedToSolid) {
+        // If there is no rain/drizzle/mist, keep the eyes solid ON
+        mip.headLEDs.write(MIP_HEAD_LED_ON, MIP_HEAD_LED_ON, MIP_HEAD_LED_ON, MIP_HEAD_LED_ON);
+        lastUpdatedToSolid = true;
+      }
+
       // Update hardware chest LED if needed
       if (!chestValuesWritten) {
         mip.chestLED.write(weatherService.red, weatherService.green, weatherService.blue);

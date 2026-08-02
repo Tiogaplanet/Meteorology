@@ -81,7 +81,7 @@ bool WeatherService::updateWeatherById(const String& locationId) {
     client.updateCurrentById(&tempData, OPEN_WEATHER_MAP_APP_ID, locationId);
     if (tempData.cityName.length() > 0) {
       data = tempData;
-      updateChestColor(); // Automatically update RGB colors for chest LED
+      updateChestColor();  // Automatically update RGB colors for chest LED
       Serial1.println("Found data for " + data.cityName + ", " + data.country + ".");
       return true;
     }
@@ -101,7 +101,7 @@ bool WeatherService::updateWeatherByName(const String& cityName) {
     client.updateCurrent(&tempData, OPEN_WEATHER_MAP_APP_ID, encodedQuery);
     if (tempData.cityName.length() > 0) {
       data = tempData;
-      updateChestColor(); // Automatically update RGB colors for chest LED
+      updateChestColor();  // Automatically update RGB colors for chest LED
       Serial1.println("Found data for " + data.cityName + ".");
       return true;
     }
