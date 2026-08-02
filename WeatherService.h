@@ -5,19 +5,20 @@
 #include <OpenWeatherMapCurrent.h>
 #include <LittleFS.h>
 #include "Config.h"
+#include "secrets.h"  // Contains your OPEN_WEATHER_MAP_APP_ID.
 
 class WeatherService {
 public:
   WeatherService();
-  
+
   bool begin();
   bool updateWeatherById(const String& locationId);
   bool updateWeatherByName(const String& cityName);
-  
+
   void saveLocation(const String& location);
   String readLocation();
   String urlEncode(const String& str);
-  void updateChestColor(); // Calculates 256-color RGB from data.temp
+  void updateChestColor();  // Calculates 256-color RGB from data.temp
 
   OpenWeatherMapCurrentData data;
   String activeLocation;
@@ -31,4 +32,4 @@ private:
   OpenWeatherMapCurrent client;
 };
 
-#endif // WEATHER_SERVICE_H
+#endif  // WEATHER_SERVICE_H

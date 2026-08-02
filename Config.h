@@ -3,12 +3,6 @@
 
 #include <Arduino.h>
 
-// WiFi Configuration
-#define SSID ".............."
-#define PASSWORD ".............."
-
-// OpenWeatherMap API Configuration
-#define OPEN_WEATHER_MAP_APP_ID "PlaceYourOwnOpenWeatherMapAPIKeyHere"
 const String OPEN_WEATHER_MAP_LOCATION_ID = "6077243";
 const String OPEN_WEATHER_MAP_LANGUAGE = "en";
 const bool IS_METRIC = false;
@@ -16,7 +10,12 @@ const bool IS_METRIC = false;
 // Hostname & Network Defaults
 const char* const HOSTNAME = "MiP-Meteorologist";
 #define HTTP_RETRIES 3
-const unsigned long WEATHER_UPDATE_INTERVAL = 900000; // 15 minutes
+const unsigned long WEATHER_UPDATE_INTERVAL = 900000;  // 15 minutes
+
+// Eye animation intervals (in milliseconds)
+const unsigned long EYES_RAIN_INTERVAL = 500;
+const unsigned long EYES_DRIZZLE_INTERVAL = 1000;
+const unsigned long EYES_MIST_INTERVAL = 3000;
 
 // Location Aliases
 struct LocationAlias {
@@ -34,4 +33,4 @@ const LocationAlias LOCATION_ALIASES[] = {
 
 const size_t NUM_ALIASES = sizeof(LOCATION_ALIASES) / sizeof(LOCATION_ALIASES[0]);
 
-#endif // CONFIG_H
+#endif  // CONFIG_H
