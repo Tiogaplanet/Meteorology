@@ -1,16 +1,37 @@
+/**
+ * @file Meteorology.ino
+ * @brief MiP tells the weather.
+ *
+ * @details This sketch leverages the MPU-D1 mini and esp8266-weather-station 
+ * libraries to transform MiP into a meteorologist. Using a webserver running
+ * on the D1 mini, you can select a city to see the weather. MiP's chest LED
+ * indicates the temperature, and if it's raining in your city, MiP's eyes
+ * randomly twinkle to indicate the rain's intensity.
+ *
+ * If all that isn't enough, MiP reports the weather on the same web-served
+ * page from which you select your city.  Just point your browser at MiP
+ * with http://[IP address]
+ *
+ * @author Samuel Trassare (Original Author)
+ * @copyright Copyright (C) 2018-2026 Samuel Trassare
+ * (https://github.com/Tiogaplanet) Licensed under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
 #include <MiP_Power_Up_-_D1_mini.h>
 #include <ArduinoOTA.h>
 #include "Config.h"
 #include "WeatherService.h"
 #include "WebServerManager.h"
-#include "secrets.h"  // Includes the SSID and password.
+#include "secrets.h"  // Contains the WiFi SSID and password.
 
 // Hardware and Service instances
 MiP mip;
 WeatherService weatherService;
 WebServerManager webServer(weatherService, mip);
 
-// MiP State variables
+// MiP state variables
 bool chestValuesWritten = false;
 bool lastUpdatedToSolid = false;
 bool extinguished = false;
